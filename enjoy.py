@@ -1,5 +1,6 @@
 import argparse
 import os
+import csv
 
 import gym
 import pybullet_envs
@@ -71,12 +72,26 @@ def main():
     ep_len = 0
     for _ in range(args.n_timesteps):
         action, _ = model.predict(obs, deterministic=deterministic)
+        current_state = obs
         # Random Agent
         # action = [env.action_space.sample()]
         # Clip Action to avoid out of bound errors
         if isinstance(env.action_space, gym.spaces.Box):
             action = np.clip(action, env.action_space.low, env.action_space.high)
         obs, reward, done, infos = env.step(action)
+
+        # print("current_state: ", current_state)
+        # print("action: ", action)
+
+        with open('/home/pulver/Desktop/traj.csv', "a") as myfile:
+            # print("Shape1: ", np.shape(current_state))
+            # print("Shape2: ", np.shape(action))
+            writer = csv.writer(myfile)
+            fields = [obs[0,0], obs[0,1], obs[0,2], action[0,0]]
+            writer.writerow(fields)
+            # string_to_add = str(obs[0,0]) + "," + str(obs[0,1]) + "," + str(obs[0,2]) + "," + str(action[0,0])
+            # myfile.write(string_to_add)
+
         if not args.no_render:
             env.render('human')
         running_reward += reward[0]

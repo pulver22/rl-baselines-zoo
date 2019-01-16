@@ -11,7 +11,7 @@ atari:
   ent_coef: 0.01
 
 Pendulum-v0:
-  n_envs: 8
+  n_envs: 32
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   n_steps: 2048
